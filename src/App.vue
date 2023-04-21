@@ -17,93 +17,127 @@
   <button class="button" @click="downloadAvatar">Download</button>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { toPng } from 'dom-to-image-more';
 import { saveAs } from 'file-saver';
 
+interface AvatarPart {
+  type: string;
+  images: Record<string, any>;
+  top: string;
+  left: string;
+  transform: string;
+}
+
+interface GeneratedPart {
+  src: string;
+  top: string;
+  left: string;
+  transform: string;
+}
+
+const parts: AvatarPart[] = [
+  {
+    type: 'background',
+    images: import.meta.glob('./assets/avatar-parts/background/*.png', {
+      eager: true,
+    }),
+    top: '0',
+    left: '0',
+    transform: '0',
+  },
+  {
+    type: 'head',
+    images: import.meta.glob('./assets/avatar-parts/head/*.png', {
+      eager: true,
+    }),
+    top: '125px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+  },
+  {
+    type: 'eyes',
+    images: import.meta.glob('./assets/avatar-parts/eyes/*.png', {
+      eager: true,
+    }),
+    top: '196px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+  },
+  {
+    type: 'eyebrows',
+    images: import.meta.glob('./assets/avatar-parts/eyebrows/*.png', {
+      eager: true,
+    }),
+    top: '177px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+  },
+  {
+    type: 'mouth',
+    images: import.meta.glob('./assets/avatar-parts/mouth/*.png', {
+      eager: true,
+    }),
+    top: '172px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+  },
+  {
+    type: 'glasses',
+    images: import.meta.glob('./assets/avatar-parts/glasses/*.png', {
+      eager: true,
+    }),
+    top: '191px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+  },
+  {
+    type: 'body',
+    images: import.meta.glob('./assets/avatar-parts/body/*.png', {
+      eager: true,
+    }),
+    top: '290px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+  },
+  {
+    type: 'top',
+    images: import.meta.glob('./assets/avatar-parts/top/*.png', {
+      eager: true,
+    }),
+    top: '58px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+  },
+  {
+    type: 'pet',
+    images: import.meta.glob('./assets/avatar-parts/pet/*.png', {
+      eager: true,
+    }),
+    top: '260px',
+    left: '-80px',
+    transform: 'rotate(-20deg)',
+  },
+];
+
+const getRandomImage = (images: Record<string, any>): string => {
+  const keys = Object.keys(images);
+  const randomIndex = Math.floor(Math.random() * keys.length);
+  const imagePath = keys[randomIndex];
+  const image = images[imagePath];
+  return image && image.default ? image.default : '';
+};
+
 export default {
   setup() {
-    const avatar = ref(null);
-    const avatarParts = reactive([]);
+    const avatar = ref<HTMLElement | null>(null);
+    const avatarParts = reactive<GeneratedPart[]>([]);
 
-    const parts = [
-      {
-        type: 'background',
-        images: import.meta.globEager('./assets/avatar-parts/background/*.png'),
-        top: '0',
-        left: '0',
-      },
-      {
-        type: 'head',
-        images: import.meta.globEager('./assets/avatar-parts/head/*.png'),
-        top: '125px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-      },
-      {
-        type: 'eyes',
-        images: import.meta.globEager('./assets/avatar-parts/eyes/*.png'),
-        top: '196px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-      },
-      {
-        type: 'eyebrows',
-        images: import.meta.globEager('./assets/avatar-parts/eyebrows/*.png'),
-        top: '177px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-      },
-      {
-        type: 'mouth',
-        images: import.meta.globEager('./assets/avatar-parts/mouth/*.png'),
-        top: '172px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-      },
-      {
-        type: 'glasses',
-        images: import.meta.globEager('./assets/avatar-parts/glasses/*.png'),
-        top: '191px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-      },
-      {
-        type: 'body',
-        images: import.meta.globEager('./assets/avatar-parts/body/*.png'),
-        top: '290px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-      },
-      {
-        type: 'top',
-        images: import.meta.globEager('./assets/avatar-parts/top/*.png'),
-        top: '58px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-      },
-      {
-        type: 'pet',
-        images: import.meta.globEager('./assets/avatar-parts/pet/*.png'),
-        top: '260px',
-        left: '-80px',
-        transform: 'rotate(-20deg)',
-      },
-    ];
-
-    const getRandomImage = (images) => {
-      const keys = Object.keys(images);
-      const randomIndex = Math.floor(Math.random() * keys.length);
-      const imagePath = keys[randomIndex];
-      const image = images[imagePath];
-      return image && image.default ? image.default : '';
-    };
-
-    const generateAvatar = () => {
+    const generateAvatar = (): void => {
       avatarParts.splice(0, avatarParts.length);
 
-      parts.forEach((part) => {
+      parts.forEach((part: AvatarPart) => {
         avatarParts.push({
           src: getRandomImage(part.images),
           top: part.top,
@@ -113,7 +147,8 @@ export default {
       });
     };
 
-    const downloadAvatar = async () => {
+    const downloadAvatar = async (): Promise<void> => {
+      if (!avatar.value) return;
       const dataUrl = await toPng(avatar.value);
       saveAs(dataUrl, 'avatar.png');
     };

@@ -10,7 +10,7 @@
 
 - HTML
 - CSS
-- JavaScript
+- TypeScript
 - Vue 3
 - Vite
 
