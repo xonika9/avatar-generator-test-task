@@ -6,17 +6,35 @@
   <button class="button" @click="downloadAvatar">Download</button>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+.avatar {
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  width: 440px;
+  height: 440px;
+  border-radius: 10px;
+  background-color: #f5f5f5;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.avatar-image {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #3498db;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #2980b9;
 }
 </style>
