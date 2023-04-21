@@ -1,7 +1,33 @@
-# Vue 3 + Vite
+# Avatar Generator Test Task
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Тестовое задание на позицию Frontend-разработчика в Студию Артемия Лебедева.
 
-## Recommended IDE Setup
+Требуется разработать веб-приложение, которое генерирует случайный аватар пользователя для скачивания в формате png. Требуемые размеры — 440 пикселей по каждой стороне.
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+Компоненты в [Figma](https://www.figma.com/file/R7xBdulOFPqIPNZwkOh9Fn/ironov-frontend-test-task?t=8r1AQLyQAsz5EfGA-6)
+
+## Stack
+
+- HTML
+- CSS
+- JavaScript
+- Vue 3
+- Vite
+
+Link to [Vercel Deploy](https://avatar-generator-test-task.vercel.app/)
+
+## Установка и запуск
+
+```bash
+# Склонируйте репозиторий
+git clone https://github.com/xonika9/avatar-generator-test-task.git
+
+# Зайдите в папку проекта
+cd avatar-generator-test-task
+
+# Установите зависимости
+npm i
+
+# Запустите проект на localhost
+npm run dev
+```
