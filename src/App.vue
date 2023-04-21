@@ -20,7 +20,6 @@
 <script lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { toPng } from 'dom-to-image-more';
-import { saveAs } from 'file-saver';
 
 interface AvatarPart {
   type: string;
@@ -129,6 +128,26 @@ const getRandomImage = (images: Record<string, any>): string => {
   return image && image.default ? image.default : '';
 };
 
+const downloadFile = async (url: string, fileName: string): Promise<void> => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const objectURL = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = objectURL;
+    link.download = fileName;
+    link.click();
+
+    setTimeout(() => {
+      URL.revokeObjectURL(objectURL);
+      link.remove();
+    }, 100);
+  } catch (error) {
+    console.error('Download error:', error);
+  }
+};
+
 export default {
   setup() {
     const avatar = ref<HTMLElement | null>(null);
@@ -150,7 +169,8 @@ export default {
     const downloadAvatar = async (): Promise<void> => {
       if (!avatar.value) return;
       const dataUrl = await toPng(avatar.value);
-      saveAs(dataUrl, 'avatar.png');
+      const fileName = 'avatar.png';
+      downloadFile(dataUrl, fileName);
     };
 
     onMounted(() => {
